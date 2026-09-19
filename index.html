@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>每日全景简报</title>
+<style>
+  :root{
+    --bg:#eef1f6; --card:#ffffff; --ink:#1b1f24; --sub:#8a909c; --line:#eef0f4;
+    --hero1:#5b6cff; --hero2:#8a5bff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0c0e13; --card:#161922; --ink:#e9ecf1; --sub:#9aa1ad; --line:#232733;
+      --hero1:#4a5bff; --hero2:#7a4aff;
+    }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .wrap{max-width:600px;margin:0 auto;padding:0 0 48px}
+
+  /* Hero */
+  .hero{
+    background:linear-gradient(135deg,var(--hero1),var(--hero2));
+    color:#fff;padding:calc(env(safe-area-inset-top) + 30px) 22px 26px;
+    border-radius:0 0 28px 28px;box-shadow:0 10px 30px rgba(91,108,255,.28);
+  }
+  .hero .date{font-size:13px;opacity:.9;letter-spacing:1px}
+  .hero .htitle{font-size:27px;font-weight:850;margin-top:6px;letter-spacing:1px}
+  .hero .hsub{font-size:12.5px;opacity:.85;margin-top:6px}
+
+  /* Nav dots */
+  .nav{display:flex;gap:12px;justify-content:center;margin:-22px 0 18px;position:relative;z-index:2}
+  .nav-dot{
+    width:50px;height:50px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    font-size:24px;text-decoration:none;background:var(--card);
+    box-shadow:0 6px 18px rgba(0,0,0,.10);border:2px solid var(--c);
+  }
+  @media (prefers-color-scheme: dark){.nav-dot{box-shadow:0 6px 18px rgba(0,0,0,.4)}}
+
+  /* Card */
+  .card{
+    background:var(--card);border-radius:22px;padding:18px 16px 14px;margin:0 14px 16px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+    opacity:0;transform:translateY(14px);animation:rise .5s ease forwards;
+  }
+  @keyframes rise{to{opacity:1;transform:none}}
+  .card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .ico{
+    width:46px;height:46px;flex:0 0 46px;border-radius:14px;
+    background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:24px;
+  }
+  .title{font-size:18px;font-weight:800}
+  .sub{font-size:11.5px;color:var(--sub);margin-top:1px}
+
+  /* 早报 */
+  .cat{margin-bottom:12px}
+  .cat-label{
+    display:inline-block;font-size:13px;font-weight:800;color:var(--c);
+    background:var(--t);padding:3px 11px;border-radius:999px;margin-bottom:7px;
+  }
+  .zlist{list-style:none;margin:0;padding:0}
+  .zlist li{display:flex;gap:10px;padding:5px 0;border-top:1px solid var(--line);align-items:flex-start}
+  .zlist li:first-child{border-top:none}
+  .num{
+    flex:0 0 22px;height:22px;margin-top:2px;border-radius:50%;
+    background:var(--t);color:var(--c);font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .txt{font-size:14.5px;color:var(--ink)}
+  .weiyu{
+    display:flex;gap:10px;margin-top:6px;padding:14px;
+    background:linear-gradient(135deg,rgba(139,92,246,.10),rgba(139,92,246,.04));
+    border-radius:14px;border-left:3px solid #8b5cf6;
+  }
+  .wy-mark{font-size:18px}
+  .weiyu p{margin:0;font-style:italic;font-size:14.5px;color:var(--ink)}
+
+  /* AI 新闻 */
+  .ai-row{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line);align-items:flex-start}
+  .ai-row:first-child{border-top:none}
+  .ai-ico{
+    flex:0 0 38px;height:38px;border-radius:12px;background:var(--t);color:var(--c);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+  }
+  .ai-row p{margin:0;font-size:14.5px}
+
+  /* 估值 */
+  .val-title{
+    font-size:15px;font-weight:800;margin-bottom:10px;
+    display:inline-block;padding:4px 12px;border-radius:10px;
+    background:linear-gradient(135deg,rgba(91,108,255,.14),rgba(138,91,255,.08));
+  }
+  .val-block{margin:10px 0;padding:11px 13px;border-radius:14px;background:var(--t);border-left:3px solid var(--c)}
+  .val-head{font-size:13px;font-weight:800;color:var(--c);margin-bottom:3px}
+  .val-body{font-size:14px;color:var(--ink)}
+
+  /* 为什么（高考作文题） */
+  .essay-sub{font-size:12.5px;color:var(--sub);font-weight:700;margin-bottom:8px}
+  .why-q{font-size:17px;font-weight:850;line-height:1.5;margin-bottom:10px;
+    padding-left:14px;border-left:4px solid #8b5cf6}
+  .why-a{font-size:14.5px;color:var(--ink);background:var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px}
+  .essay-block{border-radius:14px;padding:13px 14px;margin-bottom:10px;
+    font-size:14.5px;line-height:1.7;color:var(--ink)}
+  .essay-tag{font-weight:800;font-size:13px;margin-bottom:6px}
+  .essay-mat{background:rgba(245,158,11,.13);border-left:4px solid #f59e0b}
+  .essay-out{background:rgba(16,185,129,.12);border-left:4px solid #10b981}
+
+  .empty{color:var(--sub);font-size:14px;padding:8px 0}
+  .meta{font-size:10.5px;color:var(--sub);text-align:right;margin-top:8px}
+
+  /* 折叠展开 */
+  .collapsible.collapsed .more-item{display:none}
+  .toggle{
+    display:block;width:100%;margin-top:13px;border:none;cursor:pointer;
+    -webkit-appearance:none;appearance:none;text-align:center;
+    background:linear-gradient(135deg,rgba(91,108,255,.13),rgba(138,91,255,.07));
+    color:var(--hero1);font-size:13.5px;font-weight:800;padding:11px;border-radius:12px;
+    font-family:inherit;
+  }
+  .toggle:active{filter:brightness(.94)}
+  .cat-toggle{margin-top:8px;padding:8px;font-size:12.5px}
+
+  footer{text-align:center;color:var(--sub);font-size:11px;padding:8px 20px 0;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="date">2026-09-19 周六</div>
+    <div class="htitle">每日全景简报</div>
+    <div class="hsub">早报 · AI · 估值 · 作文题，一页尽览</div>
+  </header>
+  <nav class="nav"><a class="nav-dot" href="#sec0" style="--c:#ef4444">🌐</a><a class="nav-dot" href="#sec1" style="--c:#3b82f6">🤖</a><a class="nav-dot" href="#sec2" style="--c:#8b5cf6">📊</a><a class="nav-dot" href="#sec3" style="--c:#10b981">📝</a></nav>
+<section class="card" id="sec0" style="animation-delay:0ms"><div class="card-head"><span class="ico">🌐</span><div class="htext"><div class="title">每日早报</div><div class="sub">ALAPI 分类资讯 · 10条 + 微语</div></div></div><div class="body"><div class="cat collapsible collapsed" style="--c:#ef4444;--t:rgba(239,68,68,0.12)"><div class="cat-label">国内外大事</div><ul class="zlist"><li class=""><span class="num">1</span><span class="txt">九一八事变爆发95周年：勿忘九一八撞钟鸣警仪式在沈阳举行，9时18分撞响14下警示钟，全国多地拉响防空警报</span></li><li class=""><span class="num">2</span><span class="txt">俄罗斯第九届国家杜马选举9月18日至20日举行，堪察加率先开票，境外设319个投票点、选民超181.6万</span></li><li class="more-item"><span class="num">3</span><span class="txt">中国海警在南海仙宾礁海域依法维权执法，菲律宾3015号船故意加速斜插我海警艇致擦碰</span></li></ul><button class="toggle cat-toggle" type="button" data-coll="展开本类 ▾" data-exp="收起 ▴">展开本类 ▾</button></div><div class="cat" style="--c:#f59e0b;--t:rgba(245,158,11,0.12)"><div class="cat-label">经济</div><ul class="zlist"><li class=""><span class="num">1</span><span class="txt">日本央行年内第二次加息，货币政策转向引发市场关注</span></li><li class=""><span class="num">2</span><span class="txt">「南宁—洋浦」江海直达航线开通，西部陆海新通道物流再提速</span></li></ul></div><div class="cat" style="--c:#3b82f6;--t:rgba(59,130,246,0.12)"><div class="cat-label">科技</div><ul class="zlist"><li class=""><span class="num">1</span><span class="txt">北京「白塔国医妙荟」扩容升级：AI中医四诊仪、DIY香囊，同仁堂等老字号集体亮相</span></li></ul></div><div class="cat" style="--c:#10b981;--t:rgba(16,185,129,0.12)"><div class="cat-label">楼市</div><ul class="zlist"><li class=""><span class="num">1</span><span class="txt">住房公积金新规9月20日起施行：付房租不再设收入比例门槛，装修、物业费可提取，贷款审查缩至10日</span></li></ul></div><div class="cat collapsible collapsed" style="--c:#6b7280;--t:rgba(107,114,128,0.12)"><div class="cat-label">民生·其他</div><ul class="zlist"><li class=""><span class="num">1</span><span class="txt">国务院食安办部署中秋、国庆期间食品安全检查，守护假期「舌尖安全」</span></li><li class=""><span class="num">2</span><span class="txt">名古屋亚运会曲棍球开赛：中国男曲揭幕战2:0击败阿曼队迎「开门红」，高杰生、杜世豪短角球先后破门</span></li><li class="more-item"><span class="num">3</span><span class="txt">全国入秋进程图出炉：京津冀等地「跑步入秋」，北方秋凉加重、南方高温缩减</span></li></ul><button class="toggle cat-toggle" type="button" data-coll="展开本类 ▾" data-exp="收起 ▴">展开本类 ▾</button></div><div class="weiyu"><span class="wy-mark">💬</span><p>来时路不忘，眼前光不负；善意常在，温暖长存。</p></div></div><div class="meta">更新于 2026-09-19 08:30</div></section>
+<section class="card" id="sec1" style="animation-delay:80ms"><div class="card-head"><span class="ico">🤖</span><div class="htext"><div class="title">AI 新闻</div><div class="sub">AI / AI硬件产业链动态</div></div></div><div class="body collapsible collapsed"><div class="ai-row "><span class="ai-ico" style="--c:#ef4444;--t:rgba(239,68,68,0.12)">📈</span><p>隔夜(9/18)美股AI硬件再度领涨，存储与先进封装成最强分支 9月18日美股三大指数分化（道指-0.18%、标普+0.17%、纳指+0.39%），但费城半导体指数大涨2.78%，芯片股集体走高：闪迪飙升10.99%报1791.82美元，希捷涨近7%，西部数据涨超4%，美光涨3.92%报1015.80美元，AMD、SK海力士涨超2%，英伟达、亚马逊涨超1%。全周看纳指+0.72%、标普-0.08%、道指-1.69%，资金明显向AI硬件集中。关注理由：存储与先进封装是海外映射最强分支，但需区分业绩兑现与纯情绪炒作，9月30日美光财报是验证存储看多逻辑的近期锚点。</p></div><div class="ai-row "><span class="ai-ico" style="--c:#6366f1;--t:rgba(99,102,241,0.12)">🏢</span><p>SK海力士旗下Solidigm拟在美东建首座NAND工厂 9月18日路透报道，SK海力士NAND平台Solidigm正评估在美国东海岸（纽约州北部为候选前列）建设首条NAND量产线，最终投资规模取决于与客户的长期协议(LTA)谈判；此前其已确认与英特尔洽谈在美国生产存储芯片（或租用英特尔俄亥俄工厂、或与云厂商合资），并在印第安纳州推进超40亿美元HBM先进封装项目。二季度SK海力士及Solidigm的NAND业务营收达142.7亿美元、环比增89.5%。关注理由：存储制造本土化从HBM先进封装向NAND前端制造延伸，叠加美国施压韩国厂商扩产，中长期或改变NAND供给地理格局，利好国产存储替代逻辑。</p></div><div class="ai-row "><span class="ai-ico" style="--c:#06b6d4;--t:rgba(6,182,212,0.12)">🌐</span><p>存储超级周期向终端全面传导 9月产业链信号密集：苹果与三星就2027年内存/闪存价格达成新协议（LPDDR5X约2美元/1Gb、NAND约0.33美元/1Gb，均高于2026年报价），库克确认内存紧缺导致硬件涨价无法回避，iPhone 18 Pro系列较上代涨1000元；美光称有意义的新增供应要到2028年才爬坡；微软警告存储瓶颈让AI系统仅能发挥约20%性能；荷兰算力租赁商Nebius全系GPU租金上调最高21%；安森美再发涨价函10月10日生效。关注理由：存储从标准化配件变为稀缺战略资源，成本正沿服务器—云服务—消费终端逐级传导，量价弹性向全产业链扩散，同时也埋下2028年产能集中释放的隐忧。</p></div><div class="ai-row more-item"><span class="ai-ico" style="--c:#8b5cf6;--t:rgba(139,92,246,0.12)">💡</span><p>美银：内存墙成AI基建核心瓶颈，行业从堆算力转向效率驱动 美银研究指出，2026年AI基础设施峰会共识高度聚焦内存墙，内存与存储分层解耦成为最具共识的技术路径：Transformer模型规模每两年增长约240倍，而内存带宽与容量每两年仅增约2倍；效率指标正从原始算力(FLOPs)转向每瓦令牌数(tokens/W)，互联架构走向开放、定制芯片需求上升，博通、Marvell、Astera Labs的布局受关注。数据上，国内厂商2025年在中国加速器市场份额已升至约50%（2024年不足30%），预计2028年接近80%，华为以35.5%居国内首位，英伟达仍以47%居首但差距收窄。关注理由：评价AI硬件的新标尺正在切换，利好内存/HBM、互联与国产替代主线。</p></div><div class="ai-row more-item"><span class="ai-ico" style="--c:#f59e0b;--t:rgba(245,158,11,0.12)">💰</span><p>Anthropic算力扩张提速，年底约5吉瓦、IPO募资传约1000亿美元 知情人士称，Anthropic计划今年年底前拥有约5吉瓦可用算力（去年约1.5吉瓦），已同意向SpaceX租赁算力、每月费用12.5亿美元、协议持续至2029年5月，并洽谈向Meta租赁、两年总价值最高100亿美元；其IPO募资规模传约1000亿美元、估值上看2万亿美元，年化营收预计超1000亿美元。关注理由：GW级资本开支最终将以服务器、存储、光模块、液冷、电力形式落地，算力供应链直接受益；但需警惕循环融资与算力利用率不透明的反向风险。</p></div><button class="toggle" type="button" data-coll="展开全部 5 条 ▾" data-exp="收起 ▴">展开全部 5 条 ▾</button></div><div class="meta">更新于 2026-09-19 08:34</div></section>
+<section class="card" id="sec2" style="animation-delay:160ms"><div class="card-head"><span class="ico">📊</span><div class="htext"><div class="title">穿透估值</div><div class="sub">投资估值方法论深度解读</div></div></div><div class="body"><div class="val-title">📊 穿透估值</div><div class="val-block" style="--c:#3b82f6;--t:rgba(59,130,246,0.12)"><div class="val-head">💰 <b>实物期权估值</b></div><div class="val-body">不确定性也能是资产</div></div><div class="val-block" style="--c:#3b82f6;--t:rgba(59,130,246,0.12)"><div class="val-head">🎯 <b>核心知识点</b></div><div class="val-body">传统DCF用高折现率惩罚不确定性，实物期权反过来把不确定性当价值来源——波动越大，管理者手中那张选择权越值钱。</div></div><div class="val-block" style="--c:#8b5cf6;--t:rgba(139,92,246,0.12)"><div class="val-head">🔍 <b>两层追问拆解</b></div><div class="val-body">1）为何同一项目DCF算出负值、期权却算出正值？本质是DCF假设你被动持有既定现金流，而期权承认你能延迟、扩张或放弃，这种可选择性本身有独立价值。 2）边界在哪？期权定价要求标的可复制、波动率可估、权利可执行；对不可逆、独有、无参照资产的项目，它极易沦为给任何故事贴高价的借口。</div></div><div class="val-block" style="--c:#10b981;--t:rgba(16,185,129,0.12)"><div class="val-head">✅ <b>实战落地提示</b></div><div class="val-body">只对真有决策弹性的场景（分期投资、专利、矿权）用期权思维，对已承诺的现金流仍回到DCF。</div></div></div><div class="meta">更新于 2026-09-19 08:36</div></section>
+<section class="card" id="sec3" style="animation-delay:240ms"><div class="card-head"><span class="ico">📝</span><div class="htext"><div class="title">每天一个高考作文题</div><div class="sub">高考作文真题精析</div></div></div><div class="body"><div class="why-q">2022年北京卷《在线》（记叙文·命题作文）</div><div class="essay-block essay-mat"><div class="essay-tag">📋 原题原文</div><div class="essay-body">从下面两个题目中任选一题，按要求作答。不少于700字。将题目写在答题卡上。(50分)<br>(2)网络时代、疫情期间，很多活动转向"线上"，你一定有不少关于"在线"的经历、见闻和感受。<br>请以"在线"为题目，写一篇记叙文。<br>要求：思想健康；内容合理、充实，有细节描写；语言流畅，书写清晰。</div></div><div class="essay-block essay-out"><div class="essay-tag">💡 写作思路大纲</div><div class="essay-body">熟悉：一提在线，人人想到网课、视频、直播，在线=随时连接、方便快捷。意外：翻案在线即连接——2026年AI数字人、虚拟陪伴遍地，人却越连越孤单：同屋各刷屏、饭桌各戴耳机，真正的缺席不是断网，是人在面前心在别处。情节：写我沉迷AI虚拟朋友，直到奶奶学不会视频、只盼我回家吃饭；某夜断网，一家人第一次面对面聊天，才懂最暖的连接叫在场。收束：在线是工具，别让它替我们活；值得在线的，是肯为你关掉屏幕的人。</div></div></div><div class="meta">更新于 2026-09-19 08:40</div></section>
+  <footer>
+    由易飞网络设置，WorkBuddy自动生成，供个人阅读。
+  </footer>
+</div>
+<script>
+document.querySelectorAll('.toggle').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var box = btn.closest('.collapsible');
+    if(!box) return;
+    var collapsed = box.classList.toggle('collapsed');
+    btn.innerHTML = collapsed ? btn.getAttribute('data-coll') : btn.getAttribute('data-exp');
+  });
+});
+</script>
+</body>
+</html>
